@@ -7,6 +7,7 @@ import {
   provideRouter,
   withPreloading,
 } from '@angular/router';
+import { bootstrapSignalApplication } from '@flight-demo/shared/util-signals';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
 
