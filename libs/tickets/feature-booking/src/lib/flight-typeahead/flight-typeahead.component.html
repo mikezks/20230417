@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="card-header">
+    <h2 class="card-title">Flight Search</h2>
+  </div>
+
+  <!-- <div
+    class="card-body"
+    *ngIf="{ timer: timer$ | async } as state"> -->
+  <div
+    class="card-body"
+    *ngrxLet="timer$ as timer">
+    <p>Timer 1: {{ timer }}</p>
+    <p>Timer 2: {{ timer }}</p>
+  </div>
+</div>
