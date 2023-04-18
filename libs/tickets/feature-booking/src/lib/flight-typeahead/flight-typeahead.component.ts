@@ -5,6 +5,7 @@ import { share, tap, Subscription, delay, timer, filter, debounceTime, distinctU
 import { LetModule } from '@ngrx/component';
 import { Flight } from '@flight-demo/tickets/domain';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { RxConnector } from '../rx-connector';
 
 @Component({
   selector: 'tickets-flight-typeahead',
@@ -16,6 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   ],
   templateUrl: './flight-typeahead.component.html',
   styleUrls: ['./flight-typeahead.component.css'],
+  providers: [
+    RxConnector
+  ]
 })
 export class FlightTypeaheadComponent implements OnInit, OnDestroy {
   timer$ = timer(0, 2_000).pipe(
@@ -27,10 +31,23 @@ export class FlightTypeaheadComponent implements OnInit, OnDestroy {
   control = new FormControl('', { nonNullable: true });
   private http = inject(HttpClient);
   flights$ = this.initFlightStream();
+  private rx = inject(RxConnector);
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     // this.rxjsDemo();
+    const localTimer$ = timer(0, 1_000);
+
+    this.rx.connect(
+      localTimer$,
+      { next: value => console.log(value) }
+    );
+
+    this.rx.connect(
+      localTimer$.pipe(
+        tap(value => console.log(value))
+      )
+    );
   }
 
   private initFlightStream(): Observable<Flight[]> {
