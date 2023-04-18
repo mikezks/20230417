@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { share, tap, Subscription, delay, timer, filter, debounceTime, distinctUntilChanged, Observable, switchMap } from 'rxjs';
+import { share, tap, Subscription, delay, timer, filter, debounceTime, distinctUntilChanged, Observable, switchMap, map } from 'rxjs';
 import { LetModule } from '@ngrx/component';
 import { Flight } from '@flight-demo/tickets/domain';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -34,14 +34,32 @@ export class FlightTypeaheadComponent implements OnInit, OnDestroy {
   }
 
   private initFlightStream(): Observable<Flight[]> {
-    return this.control.valueChanges.pipe(
-      filter(city => city.length > 2),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(city => this.load(city))
-    );
+    return this.control
+      /**
+       * Stream 1: Input control -> City name
+       *  - Trigger
+       *  - Data Provider
+       */
+      .valueChanges.pipe(
+        // Filtering START
+        filter(city => city.length > 2),
+        debounceTime(300),
+        distinctUntilChanged(),
+        // Filtering END
+        /**
+         * Stream 2: HTTP call -> Filtered Flight Array
+         *  - Data Provider
+         */
+        switchMap(city => this.load(city)),
+        // Transformation
+        map(flights => flights.filter(f => f.delayed))
+      );
   }
 
+  /**
+   * Stream 2: HTTP call -> Filtered Flight Array
+   *  - Data Provider
+   */
   load(from: string): Observable<Flight[]>  {
     const url = "https://demo.angulararchitects.io/api/flight";
 
@@ -53,7 +71,6 @@ export class FlightTypeaheadComponent implements OnInit, OnDestroy {
 
     return this.http.get<Flight[]>(url, {params, headers});
   }
-
 
   rxjsDemo(): void {
     this.subscription.add(
