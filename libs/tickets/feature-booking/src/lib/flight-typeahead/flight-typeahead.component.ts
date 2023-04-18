@@ -97,6 +97,29 @@ export class FlightTypeaheadComponent implements OnInit, OnDestroy {
         // delay(3_000)
       ).subscribe(num => console.log(num))
     );
+
+    const flightState = {
+      countDelayed: 10,
+      countInTime: 20
+    };
+
+    // Mutable Update
+    flightState.countDelayed = flightState.countDelayed + 3;
+
+    // Immutable Update
+    const newFlightState = {
+      ...flightState,
+      countDelayed: flightState.countDelayed + 3
+    };
+
+    if (flightState === newFlightState) {
+      // do nothing
+    } else {
+      // do follow-up processing
+      // DOM update Angular
+      // Server call
+      // Calc
+    }
   }
 
   ngOnDestroy(): void {
