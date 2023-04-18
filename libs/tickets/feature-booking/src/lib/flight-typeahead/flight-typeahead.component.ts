@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { share, tap, Subscription, delay, timer, filter, debounceTime, distinctUntilChanged, Observable, switchMap, map } from 'rxjs';
+import { share, tap, Subscription, delay, timer, filter, debounceTime, distinctUntilChanged, Observable, switchMap, map, catchError, of } from 'rxjs';
 import { LetModule } from '@ngrx/component';
 import { Flight } from '@flight-demo/tickets/domain';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -50,7 +50,9 @@ export class FlightTypeaheadComponent implements OnInit, OnDestroy {
          * Stream 2: HTTP call -> Filtered Flight Array
          *  - Data Provider
          */
-        switchMap(city => this.load(city)),
+        switchMap(city => this.load(city).pipe(
+          catchError(() => of([]))
+        )),
         // Transformation
         map(flights => flights.filter(f => f.delayed))
       );
