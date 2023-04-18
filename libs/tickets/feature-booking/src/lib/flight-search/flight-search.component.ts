@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { CityPipe } from '@flight-demo/shared/ui-common';
 import { Flight, FlightService } from '@flight-demo/tickets/domain';
+import { Store } from '@ngrx/store';
+import { ticketsFeature } from 'libs/tickets/domain/src/lib/+state/reducer';
+import { ticketsActions } from 'libs/tickets/domain/src/lib/+state/actions';
 
 @Component({
   selector: 'app-flight-search',
@@ -15,7 +18,7 @@ import { Flight, FlightService } from '@flight-demo/tickets/domain';
 export class FlightSearchComponent {
   from = 'London';
   to = 'Paris';
-  flights: Array<Flight> = [];
+  // flights: Array<Flight> = [];
   selectedFlight: Flight | undefined;
 
   basket: Record<number, boolean> = {
@@ -24,6 +27,8 @@ export class FlightSearchComponent {
   };
 
   private flightService = inject(FlightService);
+  private store = inject(Store);
+  flights$ = this.store.select(ticketsFeature.selectFlights);
 
   search(): void {
     if (!this.from || !this.to) {
@@ -35,7 +40,10 @@ export class FlightSearchComponent {
 
     this.flightService.find(this.from, this.to).subscribe({
       next: (flights) => {
-        this.flights = flights;
+        // this.flights = flights;
+        this.store.dispatch(
+          ticketsActions.flightsLoaded({ flights })
+        );
       },
       error: (errResp) => {
         console.error('Error loading flights', errResp);

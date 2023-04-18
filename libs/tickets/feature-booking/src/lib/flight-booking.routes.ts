@@ -1,4 +1,7 @@
+import { provideEffects } from '@ngrx/effects';
+import { ticketsFeature } from './../../../domain/src/lib/+state/reducer';
 import { Routes } from '@angular/router';
+import { provideState } from '@ngrx/store';
 import { FlightBookingComponent } from './flight-booking.component';
 import { FlightEditComponent } from './flight-edit/flight-edit.component';
 import { FlightSearchComponent } from './flight-search/flight-search.component';
@@ -27,6 +30,10 @@ export const FLIGHT_BOOKING_ROUTES: Routes = [
         component: PassengerSearchComponent,
       },
     ],
+    providers: [
+      provideState(ticketsFeature),
+      provideEffects()
+    ]
   },
 ];
 
