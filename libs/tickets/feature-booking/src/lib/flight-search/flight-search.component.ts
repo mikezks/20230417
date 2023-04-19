@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { CityPipe } from '@flight-demo/shared/ui-common';
-import { Flight, FlightService, selectActiveUserFlights, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
+import { Flight, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
 import { Store } from '@ngrx/store';
+import { FlightCardComponent } from '../flight-card/flight-card.component';
 
 @Component({
   selector: 'app-flight-search',
@@ -24,7 +24,6 @@ export class FlightSearchComponent {
     5: true,
   };
 
-  private flightService = inject(FlightService);
   private store = inject(Store);
   // flights$ = this.store.select(selectActiveUserFlights);
   flights$ = this.store.select(ticketsFeature.selectFlights);
@@ -37,17 +36,12 @@ export class FlightSearchComponent {
     // Reset properties
     this.selectedFlight = undefined;
 
-    this.flightService.find(this.from, this.to).subscribe({
-      next: (flights) => {
-        // this.flights = flights;
-        this.store.dispatch(
-          ticketsActions.flightsLoaded({ flights })
-        );
-      },
-      error: (errResp) => {
-        console.error('Error loading flights', errResp);
-      },
-    });
+    this.store.dispatch(
+      ticketsActions.flightsLoad({
+        from: this.from,
+        to: this.to
+      })
+    );
   }
 
   select(f: Flight): void {
