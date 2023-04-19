@@ -1,3 +1,4 @@
+import { Store } from '@ngrx/store';
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,8 @@ import {
   RoundtripValidatorDirective,
   ValidationErrorsComponent,
 } from '@flight-demo/shared/util-validation';
-import { FlightService, initFlight } from '@flight-demo/tickets/domain';
+import { FlightService, initFlight, routerFeature } from '@flight-demo/tickets/domain';
+import { map, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-flight-edit',
@@ -30,6 +32,10 @@ export class FlightEditComponent implements OnInit {
   id = '';
   showDetails = '';
   flight = initFlight;
+  id$ = inject(Store).select(routerFeature.selectRouteParams).pipe(
+    map(params => +params['id'] ?? 0),
+    distinctUntilChanged()
+  );
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

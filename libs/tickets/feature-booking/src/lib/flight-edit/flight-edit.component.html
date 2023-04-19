@@ -1,6 +1,7 @@
 <div class="p40" *ngIf="flight.id !== 0">
   <h2>Flight Edit</h2>
 
+  <div class="mt-10">ID from Store: {{ id$ | async }}</div>
   <div class="mt-10">ShowDetails: {{ showDetails }}</div>
 
   <form #form="ngForm" appRoundTrip>
