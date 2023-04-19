@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { CityPipe } from '@flight-demo/shared/ui-common';
-import { Flight, FlightService } from '@flight-demo/tickets/domain';
+import { Flight, FlightService, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
 import { Store } from '@ngrx/store';
-import { ticketsFeature } from 'libs/tickets/domain/src/lib/+state/reducer';
-import { ticketsActions } from 'libs/tickets/domain/src/lib/+state/actions';
 
 @Component({
   selector: 'app-flight-search',
