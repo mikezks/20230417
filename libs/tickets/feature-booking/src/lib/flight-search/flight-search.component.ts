@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CityPipe } from '@flight-demo/shared/ui-common';
-import { Flight, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
+import { Flight, injectTicketsFeature, ticketsActions, ticketsFeature } from '@flight-demo/tickets/domain';
 import { Store } from '@ngrx/store';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 
@@ -24,9 +24,7 @@ export class FlightSearchComponent {
     5: true,
   };
 
-  private store = inject(Store);
-  // flights$ = this.store.select(selectActiveUserFlights);
-  flights$ = this.store.select(ticketsFeature.selectFlights);
+  ticketsFeature = injectTicketsFeature();
 
   search(): void {
     if (!this.from || !this.to) {
@@ -36,12 +34,7 @@ export class FlightSearchComponent {
     // Reset properties
     this.selectedFlight = undefined;
 
-    this.store.dispatch(
-      ticketsActions.flightsLoad({
-        from: this.from,
-        to: this.to
-      })
-    );
+    this.ticketsFeature.search(this.from, this.to);
   }
 
   select(f: Flight): void {
