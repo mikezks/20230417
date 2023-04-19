@@ -5,13 +5,20 @@ import { ticketsActions } from "./actions";
 export interface TicketsState {
   flights: Flight[];
   basket: unknown;
-  tickets: unknown;
+  user: { passengerId: number; username: string };
+  tickets: Record<number, { passengerId: number; flightId: number }>;
+  ticketIds: number[];
 }
 
 export const initialState: TicketsState = {
   flights: [],
   basket: {},
-  tickets: {}
+  user: { passengerId: 1, username: 'jane.doe' },
+  tickets: {
+    1: { passengerId: 1, flightId: 163 },
+    2: { passengerId: 1, flightId: 165 }
+  },
+  ticketIds: [2, 1]
 };
 
 export const ticketsFeature = createFeature({
