@@ -11,7 +11,7 @@ import { provideRouterFeature } from '@flight-demo/tickets/domain';
 import { AppComponent } from './app/app.component';
 import { APP_ROUTES } from './app/app.routes';
 
-bootstrapApplication(AppComponent, {
+bootstrapSignalApplication(AppComponent, {
   providers: [
     provideHttpClient(),
     provideRouter(
